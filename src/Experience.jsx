@@ -10,7 +10,6 @@ export default function Experience(props)
     const model = useLoader(GLTFLoader, '/bmw.glb');
 
     let modelRef = useRef();
-    let colorRef = useRef();
 
     let [count, setCount] = useState(0);
     let [color, setColor] = useState('#E98074');
@@ -29,6 +28,7 @@ export default function Experience(props)
 
     useFrame(() =>
     {
+        modelRef.current.rotation.y += 0.002;
         if (count < environments.length - 1 && !props.loaded) {
             setCount(count + 1)
             props.setProgress(count / environments.length);
@@ -52,6 +52,7 @@ export default function Experience(props)
             <Center>
                 <primitive object={model.scene} ref={ modelRef } />
 
+                { props.uiActive ? 
                 <Html
                     position={ [ -0.5, 2, -0.25 ] }
                 >
@@ -61,13 +62,14 @@ export default function Experience(props)
                     >
                         Lights
                     </button>
-                </Html>
+                </Html> :
+                <></> }
 
+                { props.uiActive ? 
                 <Html
                     position={ [ 0.25, 2, -0.25 ] }
                 >
                     <input 
-                        ref={ colorRef }
                         type="color" id="color" name="color" className="colorPicker"
                         value={color} 
                         onInput={ (event) => { 
@@ -75,7 +77,8 @@ export default function Experience(props)
                             setColor(event.target.value);
                         } }
                     />
-                </Html>
+                </Html> :
+                <></> }
             </Center>
         </Stage>
     </>
